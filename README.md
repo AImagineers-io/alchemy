@@ -37,3 +37,14 @@ Alchemy has the potential to evolve into a full-fledged data-gathering app, allo
    
    ```bash
    docker-compose up --build
+   ```
+
+2. **Data Processing**:
+
+   - Upload the documents or content you want to process.
+   - The app will extract and transform the content into structured data.
+   - The structured data can then be pushed to cloud storage or external services for further use.
+
+3. **Future Updates**:
+   - Alchemy will support additional features such as continuous data gathering from web sources and social media for AI systems.
+
