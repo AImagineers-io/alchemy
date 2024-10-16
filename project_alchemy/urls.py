@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dashboard/', include('dashboard.urls')),
     path('',lambda request: redirect('dashboard/', permanent=True)),
+    path('dashboard/', include('dashboard.urls')),
 ]
 
