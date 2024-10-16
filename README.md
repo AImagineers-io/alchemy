@@ -122,3 +122,16 @@ Alchemy has the potential to evolve into a full-fledged data-gathering app, allo
   - *Usage*: Provides a timestamp for tracking when each API call occurred.
 - **response_status**: The status code or outcome of the API request (e.g., 200 for success, 404 for not found).
   - *Usage*: Indicates the result of the API request, useful for debugging.
+
+
+---
+
+# Version History
+- 
+
+# Pending
+- fix the admin view not detecting static css
+
+# Journal
+
+
