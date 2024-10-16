@@ -14,6 +14,7 @@ ALLOWED_HOSTS = []
 
 
 DJANGO_APPS = [
+    'dashboard',
 ]
 
 THIRD_PARTY_APPS = [
