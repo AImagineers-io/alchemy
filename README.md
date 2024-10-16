@@ -123,7 +123,10 @@ Alchemy has the potential to evolve into a full-fledged data-gathering app, allo
 - **response_status**: The status code or outcome of the API request (e.g., 200 for success, 404 for not found).
   - *Usage*: Indicates the result of the API request, useful for debugging.
 
+# App Flowchart
+This flowchart outlines the process of document processing within the Project ALCHEMY application, focusing on how users interact with the system and how documents are managed. The flow includes document upload, text extraction, user verification, and storage in the database.
 
+![alchemyflowchar](./img/Alchemy_AppFlowChart.jpg)
 ---
 
 # Version History
