@@ -1,0 +1,17 @@
+{% include 'header.html' %}
+
+{% if request.GET.message %}
+    <div class="alert alert-success">
+        {{ request.GET.message }}
+    </div>
+{% endif %}
+
+<h2>Login</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+</form>
+<p>Don't have an account? <a href="{% url 'core:register' %}">Register here</a></p>
+
+{% include 'footer.html' %}

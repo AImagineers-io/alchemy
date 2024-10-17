@@ -2,6 +2,7 @@
 
 <header>
     <h1>Welcome to the Alchemy Dashboard</h1>
+    <p>Logged in as: {{ user.email }}</p>
 </header>
 <nav>
     <ul>
@@ -10,5 +11,10 @@
         <li>Websites</li>
     </ul>
 </nav>
+
+<form method="post" action="{% url 'core:logout' %}">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
 
 {% include 'footer.html' %}
