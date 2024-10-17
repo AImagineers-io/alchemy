@@ -135,7 +135,15 @@ This flowchart outlines the process of document processing within the Project AL
 - added core app, this will store all shared models.
 - added dashboard app, built a basic nav screen
 - fixed the admin view not detecting static css
-- started document processing logic (flowchart is done, create a new app)
+
+## V.0.2.0
+- Implemented login, logout, and registration views using Django's default forms within the `core` app.
+- Configured URL patterns and views to redirect users to the login page when accessing the root URL.
+- Set up a conditional redirect to the dashboard if a user is already logged in.
+- Modified the registration process to display a success message on the login page.
+- Added a logout link and displayed the logged-in user's email on the dashboard.
+- Fixed the logout functionality to use a custom template and redirected correctly to the login page after logging out.
+- Updated the custom user model integration and confirmed that email-only registration and login were functional.
 
 # Pending
 - 
