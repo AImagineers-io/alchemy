@@ -130,10 +130,15 @@ This flowchart outlines the process of document processing within the Project AL
 ---
 
 # Version History
-- 
+
+## V.0.1.0
+- added core app, this will store all shared models.
+- added dashboard app, built a basic nav screen
+- fixed the admin view not detecting static css
+- started document processing logic (flowchart is done, create a new app)
 
 # Pending
-- fix the admin view not detecting static css
+- 
 
 # Journal
 
