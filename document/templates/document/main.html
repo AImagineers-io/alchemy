@@ -1,5 +1,16 @@
 {% include 'header.html' %}
 
-<h2>Documents Processing</h2>
+<h2>Specify Document Path for Processing</h2>
+<form action="{% url 'document:main-document' %}" method="post">
+    {% csrf_token %}
+    <label for="file_path">Document File Path:</label><br>
+    <input type="text" id="file_path" name="file_path" placeholder="Enter the file path" required><br><br>
+
+    <input type="submit" value="Process Document">
+</form>
+
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
 
 {% include 'footer.html' %}
