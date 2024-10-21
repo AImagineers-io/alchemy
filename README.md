@@ -145,9 +145,14 @@ This flowchart outlines the process of document processing within the Project AL
 - Fixed the logout functionality to use a custom template and redirected correctly to the login page after logging out.
 - Updated the custom user model integration and confirmed that email-only registration and login were functional.
 
+## V0.3.0
+- Created a basic document processing interface (`main.html`) with a form to accept user-uploaded files (.pdf, .docx, .txt).
+- Added logic to extract text content based on file type using `docx`, `PyPDF2`, and standard text reading methods.
+- Replaced file path input with file upload field and refactored text extraction functions to handle file-like objects directly.
+- Integrated Django’s `login_required` decorator to ensure user authentication before processing documents.
+- Added a "Browse" button to facilitate file selection, allowing users to quickly choose files for processing without manually entering the file path.
+
 # Pending
 - 
 
 # Journal
-
-

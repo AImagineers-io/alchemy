@@ -1,6 +1,11 @@
 {% include 'header.html' %}
 
 <h2>Specify Document Path for Processing</h2>
+
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+
 <form action="{% url 'document:main-document' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <label for="file_path">Select Document:</label><br>
@@ -9,8 +14,15 @@
     <input type="submit" value="Process Document">
 </form>
 
-{% if message %}
-<p>{{ message }}</p>
+{% if extracted_text %}
+<h2>Edit Extracted Text</h2>
+<form method="post">
+    {% csrf_token %}
+    <textarea name="extracted_text" rows="20" cols="100">{{ extracted_text }}</textarea>
+    <input type="hidden" name="document_id" value="{{ document_id }}">  <!-- Added this hidden input -->
+    <br><br>
+    <button type="submit" name="save">Save Changes</button>
+</form>
 {% endif %}
 
 {% include 'footer.html' %}
