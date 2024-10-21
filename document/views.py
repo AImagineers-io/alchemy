@@ -11,20 +11,18 @@ from django.contrib.auth.decorators import login_required
 
 ### Support Functions ###
 
-def extract_text_from_pdf(file_path):
-    text =  ""
-    with open(file_path, 'rb') as pdf_file:
-        reader = PyPDF2.PdfReader(pdf_file)
-        text = " ".join([page.extract_text() for page in reader.pages])
+def extract_text_from_pdf(file):
+    text = ""
+    reader = PyPDF2.PdfReader(file)
+    text = " ".join([page.extract_text() for page in reader.pages])
     return text
 
-def extract_text_from_docx(file_path):
-    doc = DocxDocument(file_path)
+def extract_text_from_docx(file):
+    doc = DocxDocument(file)
     return "/n".join([para.text for para in doc.paragraphs])
 
-def extract_text_from_txt(file_path):
-    with open(file_path, "r", encoding="utf-8") as txt_file:
-        return txt_file.read()
+def extract_text_from_txt(file):
+    return file.read().decode('utf-8')
 
 ### Views ###
 
@@ -32,18 +30,15 @@ def extract_text_from_txt(file_path):
 @login_required(login_url='core:login')
 def main(request):
     if request.method == 'POST':
-        file_path = request.POST.get("file_path")
+        uploaded_file = request.FILES.get('file')
 
-        if not file_path:
-            return render(request, "document/main.html", {"message": "File path is required."})
-        
-        if not os.path.isfile(file_path):
-            return render(request, "document/main.html", {"message": "File not found."})
+        if not uploaded_file:
+            return render(request, 'document/main.html', {'message': 'No file uploaded'})
         
         try:
-            user = request.user
+            user =  request.user
 
-            file_name = os.path.basename(file_path)
+            file_name = uploaded_file.name
             file_extension = os.path.splitext(file_name)[1].lower()
             file_type = file_extension.replace('.', '').upper()
 
@@ -56,26 +51,26 @@ def main(request):
 
             extracted_text = ""
             if file_extension == '.pdf':
-                extracted_text = extract_text_from_pdf(file_path)
+                extracted_text = extract_text_from_pdf(uploaded_file)
             elif file_extension == '.docx':
-                extracted_text = extract_text_from_docx(file_path)
+                extracted_text = extract_text_from_docx(uploaded_file)
             elif file_extension == '.txt':
-                extracted_text = extract_text_from_txt(file_path)
+                extracted_text = extract_text_from_txt(uploaded_file)
             else:
                 return render(request, 'document/main.html', {"message": "Unsupported file format."})
             
             json_data = json.dumps({"content": extracted_text})
 
             new_document.unstructured_data = json_data
-            new_document.status = 'captured'
+            new_document.status = 'text extracted'
             new_document.save()
 
             return render(request, "document/main.html", {
-                "message": f"Document processed successfully with ID {new_document.document_id}."
+                "message": "File uploaded successfully.",
             })
-    
+        
         except Exception as e:
             return render(request, 'document/main.html', {"message": f"An error occurred: {str(e)}"})
-    
     else:
         return render(request, 'document/main.html')
+

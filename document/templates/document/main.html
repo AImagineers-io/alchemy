@@ -1,10 +1,10 @@
 {% include 'header.html' %}
 
 <h2>Specify Document Path for Processing</h2>
-<form action="{% url 'document:main-document' %}" method="post">
+<form action="{% url 'document:main-document' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <label for="file_path">Document File Path:</label><br>
-    <input type="text" id="file_path" name="file_path" placeholder="Enter the file path" required><br><br>
+    <label for="file_path">Select Document:</label><br>
+    <input type="file" id="file" name="file"><br><br>
 
     <input type="submit" value="Process Document">
 </form>
