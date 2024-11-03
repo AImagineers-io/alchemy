@@ -47,6 +47,8 @@ class Document(models.Model):
     document_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     file_name = models.CharField(max_length=255)
+    source_name = models.CharField(max_length=255, null=True)
+    publication_date = models.DateField(null=True)
     file_type = models.CharField(max_length=50)
     upload_date = models.DateTimeField(auto_now_add=True)
     unstructured_data = models.JSONField(null=True)

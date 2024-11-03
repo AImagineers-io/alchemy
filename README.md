@@ -151,6 +151,7 @@ This flowchart outlines the process of document processing within the Project AL
 - Replaced file path input with file upload field and refactored text extraction functions to handle file-like objects directly.
 - Integrated Django’s `login_required` decorator to ensure user authentication before processing documents.
 - Added a "Browse" button to facilitate file selection, allowing users to quickly choose files for processing without manually entering the file path.
+- Added handling for double-escaped characters in `clean_text` function
 
 # Pending
 - 

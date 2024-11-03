@@ -9,7 +9,12 @@
 <form action="{% url 'document:main-document' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <label for="file_path">Select Document:</label><br>
-    <input type="file" id="file" name="file"><br><br>
+    <input type="file" id="file" name="file"><br>
+    <label for="source">Source Material Name:</label><br>
+    <input type="text" id="source" name="source"><br>
+    <label for="publication_date">Publication Date:</label><br>
+    <input type="date" id="date" name="pub_date"><br>
+    <br><br>
 
     <input type="submit" value="Process Document">
 </form>
@@ -18,11 +23,16 @@
 <h2>Edit Extracted Text</h2>
 <form method="post">
     {% csrf_token %}
+    <input type="text" id="source" name="source" value="{{ source_name }}"><br>
+    <input type="date" id="publication_date" value="{{ publication_date }}"><br>
     <textarea name="extracted_text" rows="20" cols="100">{{ extracted_text }}</textarea>
-    <input type="hidden" name="document_id" value="{{ document_id }}">  <!-- Added this hidden input -->
+    <input type="hidden" name="document_id" value="{{ document_id }}">
     <br><br>
     <button type="submit" name="save">Save Changes</button>
 </form>
 {% endif %}
+
+
+
 
 {% include 'footer.html' %}
