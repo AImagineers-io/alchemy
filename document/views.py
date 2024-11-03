@@ -1,12 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 import os
 import json
 from docx import Document as DocxDocument
 import  PyPDF2
 from django.http import JsonResponse
-from core.models import Document, User
+from core.models import Document, ProcessedData
 from django.contrib.auth.decorators import login_required
-import re
 from openai import OpenAI
 from dotenv import load_dotenv
 
@@ -55,7 +54,86 @@ def clean_text_with_GPT(text):
 
     return clean_completions.choices[0].message.content
 
-### Views ###
+def generate_q_and_a(text, source_name, publication_date):
+    prompt = f"""
+    Generate as many Q&A pairs as possible from the following content. Format each pair as JSON object with fields 'question', 'answer', 'source_name', and 'publication_date'. Here is the content:
+    {text}
+    """
+
+    response_format = {
+        "type": "json_schema",
+        "json_schema": {
+            "name": "qa_schema",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "qa_pairs": { 
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "question": {
+                                    "description": "The question generated from the input content",
+                                    "type": "string"
+                                },
+                                "answer": {
+                                    "description": "The answer generated from the input content",
+                                    "type": "string"
+                                },
+                                "source_name": {
+                                    "description": "The name of the source for the question and answer",
+                                    "type": "string",
+                                    "default": source_name
+                                },
+                                "publication_date": {
+                                    "description": "The publication date of the source",
+                                    "type": "string",
+                                    "default": publication_date
+                                }
+                            },
+                            "required": ["question", "answer", "source_name", "publication_date"],
+                            "additionalProperties": False
+                        }
+                    }
+                },
+                "required": ["qa_pairs"],
+                "additionalProperties": False
+            }
+        }
+    }
+
+
+    try:
+        qa_response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a Q&A generator, Generate questions and answers as per user's input. Strictly in JSON format according to the schema."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            response_format=response_format
+        )
+
+        qa_content = json.loads(qa_response.choices[0].message.content)
+
+        qa_pairs = qa_content['qa_pairs']
+
+        return qa_pairs
+    
+    except json.JSONDecodeError as e:
+        print("Error decoding JSON response:", str(e))
+        raise ValueError("Failed to decode Q&A pairs as JSON")
+
+    except Exception as e:
+        print("Error during Q&A generation:", str(e))
+        raise ValueError("Failed to generate Q&A pairs")
+
+### Views
 
 @login_required(login_url='core:login')
 def main(request):
@@ -96,9 +174,7 @@ def main(request):
                 
                 cleaned_text = clean_text_with_GPT(extracted_text)
 
-                json_data = json.dumps({"content": cleaned_text})
-
-                new_document.unstructured_data = json_data
+                new_document.unstructured_data = cleaned_text
                 new_document.status = 'extracted'
                 new_document.save()
 
@@ -121,7 +197,7 @@ def main(request):
                 source_material_name = request.POST.get("source_name")
 
                 document = get_object_or_404(Document, document_id=document_id)
-                document.unstructured_data = json.dumps({"content": edited_text})
+                document.unstructured_data = edited_text
                 document.publication_date = publication_date
                 document.source_name = source_material_name
                 document.status = 'reviewed'
@@ -136,3 +212,51 @@ def main(request):
                 return render(request, 'document/main.html', {"message": f"An error occurred: {str(e)}"})
     else:
         return render(request, 'document/main.html')
+
+@login_required(login_url='core:login')
+def generate_q_and_a_view(request, document_id):
+    document = get_object_or_404(Document, document_id=document_id)
+    processed_data, created = ProcessedData.objects.get_or_create(document=document)
+
+    unstructured_data = document.unstructured_data
+
+    if request.method == "POST":
+        q_and_a_pairs = generate_q_and_a(unstructured_data, document.source_name, document.publication_date)
+
+        processed_data.structured_data = q_and_a_pairs
+        processed_data.save()
+
+        return redirect('document:edit-q-and-a', document_id=document_id)
+    
+    return render(request, 'document/generate_q_and_a.html', {
+        "document": document,
+    })
+
+@login_required(login_url='core:login')
+def edit_q_and_a_view(request, document_id):
+    document = get_object_or_404(Document, document_id=document_id)
+    processed_data = get_object_or_404(ProcessedData, document=document)
+
+    q_and_a_pairs = processed_data.structured_data
+
+    if request.method == "POST":
+        updated_pairs = []
+        for i, pair in enumerate(q_and_a_pairs):
+            question = request.POST.get(f"question_{i}")
+            answer = request.POST.get(f"answer_{i}")
+            if question and answer:
+                updated_pairs.append({
+                    "question": question,
+                    "answer": answer,
+                    "source_name": pair['source_name'],
+                    "publication_date": pair['publication_date']
+                })
+    
+        processed_data.structured_data = updated_pairs
+        processed_data.save()
+        return redirect('document:edit-q-and-a', document_id=document_id)
+    
+    return render(request, 'document/edit_q_and_a.html', {
+        "document": document,
+        "q_and_a_pairs": q_and_a_pairs,
+    })

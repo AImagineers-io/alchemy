@@ -51,7 +51,7 @@ class Document(models.Model):
     publication_date = models.DateField(null=True)
     file_type = models.CharField(max_length=50)
     upload_date = models.DateTimeField(auto_now_add=True)
-    unstructured_data = models.JSONField(null=True)
+    unstructured_data = models.TextField(null=True)
     status = models.CharField(max_length=50, default='pending')
 
     def __str__(self):

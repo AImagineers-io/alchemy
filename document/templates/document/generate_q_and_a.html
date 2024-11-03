@@ -1,0 +1,11 @@
+{% include 'header.html' %}
+
+<h2>Generate Q&A pairs for Document: {{ document.file_name }}</h2>
+<p>Click the button below to generate Q&A pairs from the document text.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Generate Q&A Pairs</button>
+</form>
+
+{% include 'footer.html' %}

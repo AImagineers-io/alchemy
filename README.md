@@ -152,6 +152,8 @@ This flowchart outlines the process of document processing within the Project AL
 - Integrated Django’s `login_required` decorator to ensure user authentication before processing documents.
 - Added a "Browse" button to facilitate file selection, allowing users to quickly choose files for processing without manually entering the file path.
 - Added handling for double-escaped characters in `clean_text` function
+- Text Cleaning Function with ChatGPT: Extended the clean_text function by integrating ChatGPT API capabilities. The updated function leverages natural language instructions to perform flexible and adaptive cleaning tasks, addressing unicode escapes, backslashes, escaped quotes, and more.
+- added Publication date and Source Material - This is to enhance training material and RAG retrieval
 
 # Pending
 - 

@@ -30,9 +30,13 @@
     <br><br>
     <button type="submit" name="save">Save Changes</button>
 </form>
+
+<!-- Button to navigate to Q&A generation after saving text -->
+{% if document_id %}
+    <form action="{% url 'document:generate-q-and-a' document_id=document_id %}" method="get" style="margin-top: 20px;">
+        <button type="submit">Generate Q&A Pairs</button>
+    </form>
 {% endif %}
-
-
-
+{% endif %}
 
 {% include 'footer.html' %}

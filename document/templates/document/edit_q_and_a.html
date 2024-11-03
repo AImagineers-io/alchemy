@@ -1,0 +1,21 @@
+{% include 'header.html' %}
+
+<h2>Edit Q&A Pairs for Document: {{ document.file_name }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {% for pair in q_and_a_pairs %}
+        <div>
+            <h3>Q&A Pair {{ forloop.counter }}</h3>
+            <label>Question:</label>
+            <textarea name="question_{{ forloop.counter0 }}" rows="3" cols="80">{{ pair.question }}</textarea><br>
+            <label>Answer:</label>
+            <textarea name="answer_{{ forloop.counter0 }}" rows="5" cols="80">{{ pair.answer }}</textarea><br>
+            <p><strong>Source:</strong> {{ pair.source_name }} | <strong>Publication Date:</strong> {{ pair.publication_date }}</p>
+            <hr>
+        </div>
+    {% endfor %}
+    <button type="submit">Save Changes</button>
+</form>
+
+{% include 'footer.html' %}
