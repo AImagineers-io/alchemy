@@ -155,7 +155,17 @@ This flowchart outlines the process of document processing within the Project AL
 - Text Cleaning Function with ChatGPT: Extended the clean_text function by integrating ChatGPT API capabilities. The updated function leverages natural language instructions to perform flexible and adaptive cleaning tasks, addressing unicode escapes, backslashes, escaped quotes, and more.
 - added Publication date and Source Material - This is to enhance training material and RAG retrieval
 
+## V0.4.0
+- **Feature Added:** Enhanced Q&A Generation and Review Flow
+  - Implemented an updated `generate_q_and_a` function to generate Q&A pairs from document content using GPT, now with strict JSON formatting for reliable parsing.
+  - Updated the `generate_q_and_a_view` to handle unstructured text as a string rather than JSON, simplifying data management.
+  - Added individual review fields for each Q&A pair in `edit_q_and_a_view`, allowing users to edit questions and answers directly.
+  - Enhanced error handling to provide meaningful feedback when Q&A generation fails.
+  - Improved user experience by redirecting to the Q&A review page upon generation success.
+
+
 # Pending
-- 
+- Need to refine generate q and a pair logic - it looks like source document is being truncated.
+- Build a logic to divide source text into chunks and loop generate qa pair logic
 
 # Journal
