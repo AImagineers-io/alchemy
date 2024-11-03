@@ -7,6 +7,11 @@ from django.http import JsonResponse
 from core.models import Document, User
 from django.contrib.auth.decorators import login_required
 import re
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+client = OpenAI()
 
 ### Support Functions ###
 
@@ -23,16 +28,32 @@ def extract_text_from_docx(file):
 def extract_text_from_txt(file):
     return file.read().decode('utf-8')
 
-def clean_text(text):
-    text = text.encode('utf-8').decode('unicode_escape')
-    text = text.replace("\\n", "\n")
-    text = text.replace("\\t", "\t")
-    text = text.replace("\\r", "")
-    text = text.replace("\\\"", "\"")
-    text = text.replace("\\'", "'")
-    text = re.sub(r"\\u[0-9A-Fa-f]{4}", "", text)
-    text = text.replace("\\\\", "")
-    return text
+def clean_text_with_GPT(text):
+    prompt = f"""
+    Clean the following text by:
+    - Decoding any unicode escapes (such as \\n, \\t, and \\r) to their corresponding characters.
+    - Removing unnecessary backlashes.
+    - Replacing escaped quotes (\\\" and \\\') with regular quotes.
+    - Stripping out any unicode sequences (e.g, \\uXXXX).
+    
+    Here is the text:
+    {text}
+    """
+    clean_completions = client.chat.completions.create(
+        model='gpt-4o-mini',
+        messages=[
+            {
+                "role": "system",
+                "content": "Ypu are a text cleaner, you will receive an unfiltered text which you need to clean using the user instructions. Do not explain the text just share the output"
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
+
+    return clean_completions.choices[0].message.content
 
 ### Views ###
 
@@ -73,7 +94,7 @@ def main(request):
                 else:
                     return render(request, 'document/main.html', {'message': 'Unsupported file format'})
                 
-                cleaned_text = clean_text(extracted_text)
+                cleaned_text = clean_text_with_GPT(extracted_text)
 
                 json_data = json.dumps({"content": cleaned_text})
 
