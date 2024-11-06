@@ -340,7 +340,7 @@ def main(request):
                     duration = end_time - start_time
                     print(f"Chunk {i}: completed in {duration:.2f} seconds")
 
-                new_document.unstructured_data = " ".join(cleaned_chunks)
+                new_document.unstructured_data = json.dumps(cleaned_chunks)
                 new_document.status = 'extracted'
                 new_document.save()
 
@@ -353,6 +353,7 @@ def main(request):
                 })
             
             except Exception as e:
+                print(f"Error while processing file: {str(e)}")
                 return render(request, 'document/main.html', {"message": f"Error occurred while processing file: {str(e)}"})
         
         elif "save" in request.POST:

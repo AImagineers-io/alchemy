@@ -163,9 +163,18 @@ This flowchart outlines the process of document processing within the Project AL
   - Enhanced error handling to provide meaningful feedback when Q&A generation fails.
   - Improved user experience by redirecting to the Q&A review page upon generation success.
 
+## V0.5.0
+- Added `chunk_text_with_context` function to split extracted text into smaller chunks with overlapping tokens for better processing.
+- Integrated `spacy` for sentence-based chunking and `tiktoken` for token counting, ensuring each chunk is within the specified token limit.
+- Implemented context overlap in chunking logic to maintain coherence across chunk boundaries.
+- Modified `main` view to handle different file formats and check for unsupported file types with a user-friendly error message.
+- Adjusted view logic to handle and save `unstructured_data` consistently as plain text across processes.
+- added print logs to trace what steps the app is taking
+
 
 # Pending
-- Need to refine generate q and a pair logic - it looks like source document is being truncated.
-- Build a logic to divide source text into chunks and loop generate qa pair logic
+- Need to fix error occured while processing
+- need to trace where this issue is
+- if it heps print the whole error at the moment error only shows as message and not on logs
 
 # Journal
