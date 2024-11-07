@@ -170,11 +170,13 @@ This flowchart outlines the process of document processing within the Project AL
 - Modified `main` view to handle different file formats and check for unsupported file types with a user-friendly error message.
 - Adjusted view logic to handle and save `unstructured_data` consistently as plain text across processes.
 - added print logs to trace what steps the app is taking
+- Fixed issue on invalid JSON format on unstructed data
+- **Enhanced Login and Registration Frontend:** Updated the UI for the login and registration screens with a modern, Bootstrap-based design, providing a more consistent and visually appealing user experience.
+- **Integrated Django Widget Tweaks:** Added the `django-widget-tweaks` library to dynamically style form fields with Bootstrap classes, allowing for better control over form aesthetics and layout.
+
+
 
 
 # Pending
-- Need to fix error occured while processing
-- need to trace where this issue is
-- if it heps print the whole error at the moment error only shows as message and not on logs
 
 # Journal

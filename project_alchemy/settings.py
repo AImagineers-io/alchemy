@@ -17,6 +17,7 @@ DJANGO_APPS = [
     'dashboard',
     'core',
     'document',
+    'widget_tweaks',
 ]
 
 THIRD_PARTY_APPS = [
