@@ -174,7 +174,33 @@ This flowchart outlines the process of document processing within the Project AL
 - **Enhanced Login and Registration Frontend:** Updated the UI for the login and registration screens with a modern, Bootstrap-based design, providing a more consistent and visually appealing user experience.
 - **Integrated Django Widget Tweaks:** Added the `django-widget-tweaks` library to dynamically style form fields with Bootstrap classes, allowing for better control over form aesthetics and layout.
 
+## V[0.7.0] - 2024-12-03
+### Added
+- Initial implementation of **Task Tracking** functionality:
+  - Built an API endpoint (`/tasks/`) to fetch user-specific tasks using the `TaskLog` model.
+  - Created a frontend view (`task_tracking.html`) to display real-time task progress using a progress bar.
+  - Implemented `fetchUserTasks` in `theme.js` to fetch and display tasks dynamically on the Task Tracking page.
+  - Introduced periodic polling with `setInterval` to update the task progress every 5 seconds.
+- Added task deletion functionality:
+  - Individual "Delete" buttons for each task in the Task Tracking view.
+  - Backend API (`/tasks/<task_id>/delete/`) to handle individual task deletions.
+  - JavaScript integration to call the delete API dynamically.
+  - "Delete All" button to remove all tasks at once with a single click.
+- Enhanced task logging:
+  - Added `log_messages` to track detailed logs of task events (e.g., progress updates, task-specific messages).
+  - Displayed logs dynamically under each task in the Task Tracking view.
+- Updated **Document Upload** logic to integrate with Celery:
+  - Triggered the `process_document` task asynchronously upon file upload.
+  - Tracked the task progress and results using the `TaskLog` model.
 
+### Fixed
+- Resolved an issue where `theme.js` was not properly loaded into templates.
+- Addressed the CSRF token error in delete requests by implementing a `getCookie` function.
+
+### Changed
+- Refactored frontend and backend logic to improve code readability and maintainability:
+  - Moved reusable helper functions to `utils.js` and backend utility modules.
+  - Optimized polling mechanism to minimize server load while maintaining real-time updates.
 
 
 # Pending
