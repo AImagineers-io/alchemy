@@ -105,6 +105,7 @@ class TaskLog(models.Model):
     error_message = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    log_messages = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"Task: {self.task_name} (Status: {self.status})"

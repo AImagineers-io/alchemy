@@ -124,30 +124,18 @@ document.getElementById('delete-all-btn').addEventListener('click', function () 
 
 // Function to fetch task updates from the backend API
 function fetchUserTasks() {
-    console.log("fetchUserTasks is running...");
+    console.log("Fetching user tasks...");
     fetch('/tasks/')
         .then(response => response.json())
         .then(data => {
-            console.log("Data fetched from API:", data);
-
             const container = document.getElementById('task-container');
-            if (!container) {
-                console.error("Task container not found!");
-                return;
-            }
-
-            container.innerHTML = ''; // Clear previous tasks
-            if (data.length === 0) {
-                console.log("No tasks to display.");
-                container.innerHTML = '<p>No tasks found.</p>';
-                return;
-            }
+            container.innerHTML = '';
 
             data.forEach(task => {
                 const progressColor = task.status === 'FAILURE' ? 'bg-danger' : 'bg-success';
-            
+
                 const card = `
-                    <div class="card mb-3" id="task-${task.log_id}">
+                    <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">${task.task_name}</h5>
                             <p>Status: <strong>${task.status}</strong></p>
@@ -163,21 +151,48 @@ function fetchUserTasks() {
                                     ${task.progress}%
                                 </div>
                             </div>
-                            ${task.result ? `<p><strong>Result:</strong> ${task.result}</p>` : ''}
-                            ${task.error_message ? `<p class="text-danger"><strong>Error:</strong> ${task.error_message}</p>` : ''}
-                            <button class="btn btn-danger delete-task-btn" data-task-id="${task.log_id}">Delete</button>
+                            <pre>${task.log_messages ? task.log_messages : ''}</pre>
+                            <button class="btn btn-danger delete-btn" data-id="${task.log_id}">Delete</button>
                         </div>
                     </div>
                 `;
                 container.innerHTML += card;
             });
+
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const taskId = this.getAttribute('data-id');
+                    deleteTask(taskId);
+                });
+            });
         })
-        .catch(error => {
-            console.error("Error fetching tasks:", error);
-            const container = document.getElementById('task-container');
-            container.innerHTML = '<p class="text-danger">Failed to load tasks. Please try again later.</p>';
-        });
+        .catch(error => console.error('Error fetching tasks:', error));
 }
+
+// Delete a specific task
+function deleteTask(taskId) {
+    fetch(`/tasks/${taskId}/delete/`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log(`Task ${taskId} deleted successfully.`);
+                fetchUserTasks(); // Refresh task list after deletion
+            } else {
+                console.error(`Failed to delete task ${taskId}.`);
+            }
+        })
+        .catch(error => console.error('Error deleting task:', error));
+}
+
+// Run fetchUserTasks on page load
+fetchUserTasks();
+
+
 
 //Run the function once when the page loads
 fetchUserTasks();

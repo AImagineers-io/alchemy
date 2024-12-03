@@ -38,6 +38,7 @@ def user_tasks(request: HttpRequest) -> JsonResponse:
         'progress',
         'result',
         'error_message',
+        'log_messages',
         'created_at',
         'updated_at',
     )
