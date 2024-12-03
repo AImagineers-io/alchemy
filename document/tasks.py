@@ -16,14 +16,14 @@ def process_document(self, document_id, user_id):
 
     try:
         # Just a simulation for now
-        time.sleep(2)
+        time.sleep(5)
         task_log.progress = 0
         task_log.save()
 
         i = 0;
-        while i <= 10:
+        while i < 10:
             i +=1
-            time.sleep(1)
+            time.sleep(2)
             task_log.progress = i * 10
             task_log.save()
         
