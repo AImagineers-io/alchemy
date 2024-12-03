@@ -178,5 +178,60 @@ This flowchart outlines the process of document processing within the Project AL
 
 
 # Pending
+- q and a pairs i think is not yet saved in a table... create new table for the q and a pairs (not json)
+- i think the logic should be... q and a pair chunk created... save in db... then move to another one.
+- the editing will happen later on... using the CRUD logic we'll create later.
+- we probably need to demolish the document data table and instead use q and a pair db.
+- documents needs to be saved as a table so that processing q and a will be entirely separate and the user can do this at a later time.
+- then work on the main dashboard to show the metrics
+- introduce redis and clelery
+- sort out the source code... clean it up and make sure we are ready for expanding the app
+- work on a CRUD system for q and a pairs
+- work on a different document format - excel, xls, csv
+
+
+
 
 # Journal
+
+# Project Alchemy: Current Status and Next Steps
+
+## **Current Status**
+You are working on making Project Alchemy's dashboard more user-friendly by:
+1. **Tracking Background Tasks**: Using Celery to process tasks asynchronously and showing task progress on the frontend.
+2. **Toast Notifications**: Implementing a system to notify users of task updates in real time.
+3. **Task Logs**: Adding a backend logging system to record task events and integrating it with the toast system.
+
+---
+
+## **Progress So Far**
+
+### **Backend**
+- Created a `LogEntry` model to store task logs (user messages for toast notifications).
+- Tasks in `tasks.py` now log key events (e.g., "Task started," "Task 50% complete," "Task completed").
+
+### **API**
+- Created a `/logs/recent/` API endpoint to fetch recent log entries for the authenticated user.
+
+### **Frontend**
+- Built a basic toast notification system with:
+  - **CSS for styling toasts**.
+  - **JavaScript logic** to fetch logs from the API and display toasts dynamically.
+- Discussed polling and real-time updates using WebSockets or Django Channels for future improvements.
+
+---
+
+## **What’s Next?**
+
+### **Frontend Integration**
+1. Add the toast notification script to the dashboard (`main.html`).
+2. Test the toast system with real task events.
+
+### **Further Enhancements**
+- Implement WebSockets (optional) for real-time updates instead of polling.
+- Consider adding a "View All Tasks" section or page for comprehensive task history.
+
+---
+
+## **Summary**
+You are making excellent progress! When you're ready to resume, use this summary to jump back in or ask for more guidance. Rest up, and we'll pick up where you left off. 😊

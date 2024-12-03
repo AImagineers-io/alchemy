@@ -1,42 +1,74 @@
 {% include 'header.html' %}
 
-<h2>Specify Document Path for Processing</h2>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-3">
+            {% include 'sidebar.html' %}
+        </div>
 
-{% if message %}
-<p>{{ message }}</p>
-{% endif %}
+        <!-- Main Content -->
+        <div class="col-9">
+            <div class="p-4">
+                <h2>Specify Document Path for Processing</h2>
+                
+                {% if message %}
+                <div class="alert alert-info">{{ message }}</div>
+                {% endif %}
 
-<form action="{% url 'document:main-document' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label for="file_path">Select Document:</label><br>
-    <input type="file" id="file" name="file"><br>
-    <label for="source">Source Material Name:</label><br>
-    <input type="text" id="source" name="source"><br>
-    <label for="publication_date">Publication Date:</label><br>
-    <input type="date" id="publication_date" name="publication_date"><br>
-    <br><br>
+                <form action="{% url 'document:main-document' %}" method="post" enctype="multipart/form-data" class="mb-4">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select Document:</label>
+                        <input type="file" id="file" name="file" class="form-control">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="source" class="form-label">Source Material Name:</label>
+                        <input type="text" id="source" name="source" class="form-control">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="publication_date" class="form-label">Publication Date:</label>
+                        <input type="date" id="publication_date" name="publication_date" class="form-control">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Process Document</button>
+                </form>
 
-    <input type="submit" value="Process Document">
-</form>
+                {% if extracted_text %}
+                <h2>Edit Extracted Text</h2>
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="source" class="form-label">Source Material Name:</label>
+                        <input type="text" id="source" name="source" value="{{ source_name }}" class="form-control">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="publication_date" class="form-label">Publication Date:</label>
+                        <input type="date" id="publication_date" name="publication_date" value="{{ publication_date }}" class="form-control">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="extracted_text" class="form-label">Extracted Text:</label>
+                        <textarea name="extracted_text" rows="10" class="form-control">{{ extracted_text }}</textarea>
+                    </div>
+                    
+                    <input type="hidden" name="document_id" value="{{ document_id }}">
+                    
+                    <button type="submit" name="save" class="btn btn-success">Save Changes</button>
+                </form>
 
-{% if extracted_text %}
-<h2>Edit Extracted Text</h2>
-<form method="post">
-    {% csrf_token %}
-    <input type="text" id="source" name="source" value="{{ source_name }}"><br>
-    <input type="date" id="publication_date" value="{{ publication_date }}"><br>
-    <textarea name="extracted_text" rows="20" cols="100">{{ extracted_text }}</textarea>
-    <input type="hidden" name="document_id" value="{{ document_id }}">
-    <br><br>
-    <button type="submit" name="save">Save Changes</button>
-</form>
-
-<!-- Button to navigate to Q&A generation after saving text -->
-{% if document_id %}
-    <form action="{% url 'document:generate-q-and-a' document_id=document_id %}" method="get" style="margin-top: 20px;">
-        <button type="submit">Generate Q&A Pairs</button>
-    </form>
-{% endif %}
-{% endif %}
+                {% if document_id %}
+                <form action="{% url 'document:generate-q-and-a' document_id=document_id %}" method="get">
+                    <button type="submit" class="btn btn-secondary">Generate Q&A Pairs</button>
+                </form>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 
 {% include 'footer.html' %}
