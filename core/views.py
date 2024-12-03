@@ -7,6 +7,7 @@ from django.http import JsonResponse, HttpRequest
 from django.contrib.auth.decorators import login_required
 from .models import TaskLog
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 def register(request):
@@ -46,3 +47,24 @@ def user_tasks(request: HttpRequest) -> JsonResponse:
 @method_decorator(login_required, name='dispatch')
 class TaskTrackingView(TemplateView):
     template_name = 'task_tracking.html'
+
+
+### TASK DELETION API ###
+@csrf_exempt
+def delete_task(request, task_id):
+    if request.method == 'DELETE':
+        try:
+            task = TaskLog.objects.get(log_id=task_id)
+            task.delete()
+            return JsonResponse({'message': f'Task {task_id} deleted successfully.'}, status=200)
+        except TaskLog.DoesNotExist:
+            return JsonResponse({'error': 'Task not found.'}, status=404)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+### TASK DELETION ALL ###
+@csrf_exempt
+def delete_all_tasks(request):
+    if request.method == 'DELETE':
+        TaskLog.objects.all().delete()
+        return JsonResponse({'message': 'All tasks deleted successfully.'}, status=200)
+    return JsonResponse({'error': 'Invalid request method.'}, status=405)

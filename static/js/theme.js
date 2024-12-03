@@ -61,6 +61,67 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+//define getcookie function
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Check if this cookie string begins with the name we want
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+
+// Function to delete a task from the backend API
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('delete-task-btn')) {
+        const taskId = event.target.getAttribute('data-task-id');
+        fetch(`/tasks/${taskId}/delete/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken') // Django CSRF token
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log(`Task ${taskId} deleted successfully.`);
+                    fetchUserTasks(); // Refresh tasks after deletion
+                } else {
+                    console.error(`Failed to delete task ${taskId}.`);
+                }
+            })
+            .catch(error => console.error('Error deleting task:', error));
+    }
+});
+
+// Function to delete all tasks from the backend API
+document.getElementById('delete-all-btn').addEventListener('click', function () {
+    fetch('/tasks/delete-all/', {
+        method: 'DELETE',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken') // Django CSRF token
+        }
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('All tasks deleted successfully.');
+                fetchUserTasks(); // Refresh tasks after deletion
+            } else {
+                console.error('Failed to delete all tasks.');
+            }
+        })
+        .catch(error => console.error('Error deleting all tasks:', error));
+});
+
+
 // Function to fetch task updates from the backend API
 function fetchUserTasks() {
     console.log("fetchUserTasks is running...");
@@ -83,14 +144,13 @@ function fetchUserTasks() {
             }
 
             data.forEach(task => {
-                console.log("Processing task:", task);
                 const progressColor = task.status === 'FAILURE' ? 'bg-danger' : 'bg-success';
-
+            
                 const card = `
-                    <div class="card mb-3">
+                    <div class="card mb-3" id="task-${task.log_id}">
                         <div class="card-body">
                             <h5 class="card-title">${task.task_name}</h5>
-                            <p><strong>Status:</strong> ${task.status}</p>
+                            <p>Status: <strong>${task.status}</strong></p>
                             <div class="progress mb-3">
                                 <div 
                                     class="progress-bar ${progressColor}" 
@@ -100,15 +160,16 @@ function fetchUserTasks() {
                                     aria-valuemin="0" 
                                     aria-valuemax="100"
                                 >
-                                    ${task.status === 'IN_PROGRESS' ? `${task.progress}%` : task.status}
+                                    ${task.progress}%
                                 </div>
                             </div>
                             ${task.result ? `<p><strong>Result:</strong> ${task.result}</p>` : ''}
                             ${task.error_message ? `<p class="text-danger"><strong>Error:</strong> ${task.error_message}</p>` : ''}
+                            <button class="btn btn-danger delete-task-btn" data-task-id="${task.log_id}">Delete</button>
                         </div>
                     </div>
                 `;
-                container.innerHTML += card; // Append the card
+                container.innerHTML += card;
             });
         })
         .catch(error => {
@@ -121,3 +182,4 @@ function fetchUserTasks() {
 //Run the function once when the page loads
 fetchUserTasks();
 setInterval(fetchUserTasks, 5000); // Fetch tasks every 5 seconds
+

@@ -16,6 +16,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='core/logout.html'), name='logout'),
     path('register/', views.register, name='register'),
     path('task-tracing/', TemplateView.as_view(template_name='core/task_tracking.html'), name='task-tracking'),
-    path('tasks/', user_tasks, name='user-tasks')
+    path('tasks/', user_tasks, name='user-tasks'),
+    path('tasks/<int:task_id>/delete/', views.delete_task, name='delete-task'),
+    path('tasks/delete-all/', views.delete_all_tasks, name='delete-all-tasks'),
 ]
 
