@@ -1,0 +1,33 @@
+{% load static %}
+{% include 'header.html' %}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-3">
+            {% include 'sidebar.html' %}
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-9">
+            <div class="p-4">
+                <h2>Task Tracking</h2>
+
+                {% if message %}
+                <div class="alert alert-info">{{ message }}</div>
+                {% endif %}
+
+                <p>Monitor the progress of your tasks in real-time below.</p>
+                <button id="delete-all-btn" class="btn btn-danger mb-3">Delete All Tasks</button>
+                <div id="task-container">
+                    <!-- Task cards will be dynamically added here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% include 'footer.html' %}

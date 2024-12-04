@@ -1,20 +1,24 @@
+{% load static %}
 {% include 'header.html' %}
 
-<header>
-    <h1>Welcome to the Alchemy Dashboard</h1>
-    <p>Logged in as: {{ user.email }}</p>
-</header>
-<nav>
-    <ul>
-        <li>Documents</li>
-        <li>Videos</li>
-        <li>Websites</li>
-    </ul>
-</nav>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Column-->
+         <div class="col-md-3">
+            {% include 'sidebar.html' %}
+         </div>
 
-<form method="post" action="{% url 'core:logout' %}">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-</form>
+         <!-- Main Content Column-->
+          <div class="col-md-9">
+            <div class="p-4">
+                <h1>Welcome to the Alchemy Dashboard</h1>
+            </div>
+          </div>
+
+
+
+    </div>
+</div>
+
 
 {% include 'footer.html' %}

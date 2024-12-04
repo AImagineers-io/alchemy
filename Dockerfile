@@ -9,6 +9,8 @@ WORKDIR /app
 RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     /py/bin/pip install -r /requirements.txt && \
+    /py/bin/pip install spacy && \
+    /py/bin/python -m spacy download en_core_web_sm && \
     adduser --disabled-password --no-create-home django-user
 
 ENV PATH="/py/bin:$PATH"

@@ -12,6 +12,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  
+  redis:
+    image: redis:6-alpine
+    container_name: redis
+    ports:
+      - 6379:6379
 
   app:
     container_name: django-app-alchemy
@@ -28,6 +34,33 @@ services:
       - PORT=8000
     restart: always
     depends_on:
+      - db
+      - redis
+
+  celery:
+    container_name: celery-worker-alchemy
+    build:
+      context: .
+    command: celery -A project_alchemy worker --loglevel=info
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+      - db
+  
+  celery-beat:
+    container_name: celery-beat-alchemy
+    build:
+      context: .
+    command: celery -A project_alchemy beat --loglevel=info
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
       - db
 
 volumes:

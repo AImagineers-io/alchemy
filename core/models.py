@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -47,8 +48,12 @@ class Document(models.Model):
     document_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     file_name = models.CharField(max_length=255)
+    source_name = models.CharField(max_length=255, null=True)
+    publication_date = models.DateField(null=True)
     file_type = models.CharField(max_length=50)
     upload_date = models.DateTimeField(auto_now_add=True)
+    unstructured_data = models.TextField(null=True)
+    cleaned_data = models.TextField(null=True)
     status = models.CharField(max_length=50, default='pending')
 
     def __str__(self):
@@ -57,7 +62,7 @@ class Document(models.Model):
 class ProcessedData(models.Model):
     data_id = models.AutoField(primary_key=True)
     document = models.OneToOneField(Document, on_delete=models.CASCADE)
-    structured_data = models.JSONField()
+    structured_data = models.JSONField(null=True)
     processed_date = models.DateTimeField(auto_now_add=True)
     storage_location = models.CharField(max_length=50, default='Local')
 
@@ -83,3 +88,38 @@ class APIRequestLog(models.Model):
 
     def __str__(self):
         return f"API Request by User: {self.user.email} on {self.request_timestamp}"
+
+class TaskLog(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('IN_PROGRESS', 'In Progress'),
+        ('SUCCESS', 'Success'),
+        ('FAILURE', 'Failure'),
+    ]
+    
+    log_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    task_name = models.CharField(max_length=255)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='PENDING')
+    progress = models.IntegerField(default=0)
+    result = models.TextField(null=True, blank=True)
+    error_message = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    log_messages = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Task: {self.task_name} (Status: {self.status})"
+
+class QAPair(models.Model):
+    qa_id = models.AutoField(primary_key=True)
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='qa_pairs')
+    question = models.TextField()
+    answer = models.TextField()
+    source_name = models.CharField(max_length=255, null=True, blank=True)
+    publication_date = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Q: {self.question[:50]} | A: {self.answer[:50]}"
