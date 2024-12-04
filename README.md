@@ -202,6 +202,56 @@ This flowchart outlines the process of document processing within the Project AL
   - Moved reusable helper functions to `utils.js` and backend utility modules.
   - Optimized polling mechanism to minimize server load while maintaining real-time updates.
 
+## V[0.8.0] - 2024-12-03
+### **Added**
+- **Enhanced Document Processing Logic:**
+  - Integrated asynchronous Celery tasks for text cleaning and Q&A generation.
+  - Handled multiple file types (`PDF`, `DOCX`, `TXT`) for text extraction.
+  - Implemented dynamic progress tracking using the `TaskLog` model with real-time updates.
+  - Added a cap on progress tracking to show a maximum of **90%** until task completion.
+
+- **Q&A Pair Generation:**
+  - Designed and implemented the `QAPair` model to store generated Q&A pairs with fields like:
+    - `document`, `question`, `answer`, `source_name`, and `publication_date`.
+  - Integrated `bulk_create` for efficient database persistence of Q&A pairs.
+
+- **Task Logging Enhancements:**
+  - Added `log_messages` field to the `TaskLog` model to record detailed step-by-step progress.
+  - Updated task tracking frontend to dynamically display logs alongside task progress bars.
+
+- **Frontend Improvements:**
+  - Enhanced task tracking page to include:
+    - Individual "Delete" buttons for each task.
+    - A "Delete All" button for clearing all tasks at once.
+  - Integrated `theme.js` for:
+    - Periodic polling of the `/tasks/` API using `fetchUserTasks`.
+    - Dynamic updates to task progress and logs.
+    - Handling delete functionality through a dedicated API.
+
+### **Fixed**
+- **Serialization Issue:**
+  - Resolved `InMemoryUploadedFile` JSON serialization error by moving text extraction logic out of Celery.
+  
+- **Bug in Q&A Saving Logic:**
+  - Fixed `bulk_create` usage for `QAPair` model.
+  - Added validation to ensure proper document linkage during Q&A generation.
+
+- **JavaScript Integration:**
+  - Corrected missing `fetchUserTasks` invocation on page load.
+  - Fixed `getCookie` function for CSRF token handling.
+
+- **Progress Calculation:**
+  - Updated logic to dynamically calculate task progress without exceeding limits.
+
+### **Future Considerations**
+- Implement WebSocket support for instant updates in the Task Tracking view.
+- Optimize the chunking and cleaning logic for handling larger documents.
+- Add indexing to database tables for improved query performance.
+
+---
+
+### **Current Status**
+- The application successfully processes documents, generates Q&A pairs, and tracks task progress dynamically with user-facing updates.
 
 # Pending
 - q and a pairs i think is not yet saved in a table... create new table for the q and a pairs (not json)
@@ -214,9 +264,6 @@ This flowchart outlines the process of document processing within the Project AL
 - sort out the source code... clean it up and make sure we are ready for expanding the app
 - work on a CRUD system for q and a pairs
 - work on a different document format - excel, xls, csv
-
-
-
 
 # Journal
 
@@ -246,7 +293,6 @@ You are working on making Project Alchemy's dashboard more user-friendly by:
 - Discussed polling and real-time updates using WebSockets or Django Channels for future improvements.
 
 ---
-
 ## **What’s Next?**
 
 ### **Frontend Integration**
@@ -256,8 +302,3 @@ You are working on making Project Alchemy's dashboard more user-friendly by:
 ### **Further Enhancements**
 - Implement WebSockets (optional) for real-time updates instead of polling.
 - Consider adding a "View All Tasks" section or page for comprehensive task history.
-
----
-
-## **Summary**
-You are making excellent progress! When you're ready to resume, use this summary to jump back in or ask for more guidance. Rest up, and we'll pick up where you left off. 😊
