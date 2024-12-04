@@ -53,6 +53,7 @@ class Document(models.Model):
     file_type = models.CharField(max_length=50)
     upload_date = models.DateTimeField(auto_now_add=True)
     unstructured_data = models.TextField(null=True)
+    cleaned_data = models.TextField(null=True)
     status = models.CharField(max_length=50, default='pending')
 
     def __str__(self):
@@ -109,3 +110,16 @@ class TaskLog(models.Model):
 
     def __str__(self):
         return f"Task: {self.task_name} (Status: {self.status})"
+
+class QAPair(models.Model):
+    qa_id = models.AutoField(primary_key=True)
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='qa_pairs')
+    question = models.TextField()
+    answer = models.TextField()
+    source_name = models.CharField(max_length=255, null=True, blank=True)
+    publication_date = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Q: {self.question[:50]} | A: {self.answer[:50]}"

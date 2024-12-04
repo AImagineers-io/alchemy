@@ -18,8 +18,6 @@ load_dotenv()
 client = OpenAI()
 openai_model_generic = "gpt-4o-mini"
 
-
-
 ### MAIN DOCUMENT VIEW ###
 def main(request):
     if request.method == 'POST':
@@ -37,6 +35,16 @@ def main(request):
                 file_extension = os.path.splitext(file_name)[1].lower()
                 file_type = file_extension.replace('.', '').upper()
 
+                extracted_text = ""
+                if file_extension == '.pdf':
+                    extracted_text = extract_text_from_pdf(uploaded_file)
+                elif file_extension == '.docx':
+                    extracted_text = extract_text_from_docx(uploaded_file)
+                elif file_extension == '.txt':
+                    extracted_text = extract_text_from_txt(uploaded_file)
+                else:
+                    raise ValueError("Unsupported file format.")
+
                 new_document = Document.objects.create(
                     user=user,
                     file_name=file_name,
@@ -46,7 +54,13 @@ def main(request):
                     status='pending'
                 )
 
-                process_document.delay(document_id=new_document.document_id, user_id=user.user_id)
+                process_document.delay(
+                    document_id=new_document.document_id,
+                    user_id=user.user_id,
+                    extracted_text=extracted_text,
+                    source_name=source_material_name,
+                    publication_date=publication_date,
+                    )
 
                 return render(request, 'document/main.html', {
                     "message": "File upload successfully. Processing has started.",

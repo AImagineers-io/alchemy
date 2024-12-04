@@ -193,5 +193,4 @@ def generate_q_and_a(chunk, context, source_name, publication_date, model):
     except Exception as e:
         print("Error during Q&A generation:", str(e))
         raise ValueError("Failed to generate Q&A pairs")
-
-
+    
