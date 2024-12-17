@@ -86,9 +86,9 @@ def manage_q_and_a(request):
         qa_pairs = qa_pairs.filter(status=status)
     if search_query:
         qa_pairs = qa_pairs.filter(
-            question_icontains=search_query,
+            question__icontains=search_query,
         ) | qa_pairs.filter(
-            answer_icontains=search_query,
+            answer__icontains=search_query,
         )
 
     paginator = Paginator(qa_pairs, 10)
