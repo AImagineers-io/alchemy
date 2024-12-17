@@ -6,6 +6,7 @@ import time
 openai_model_generic = "gpt-4o-mini"
 
 @shared_task(bind=True)
+
 def process_document(self, document_id, user_id, extracted_text, source_name, publication_date):
     user = User.objects.get(user_id=user_id)
 

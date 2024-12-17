@@ -295,10 +295,38 @@ You are working on making Project Alchemy's dashboard more user-friendly by:
 ---
 ## **What’s Next?**
 
-### **Frontend Integration**
-1. Add the toast notification script to the dashboard (`main.html`).
-2. Test the toast system with real task events.
+Manage Q & A Pairs screen
+- display table showing all pairs - with edit and delete buttons
+- filter function
+- search function
+- add reviewed tick box - this means adding a reviewed field on QApairs model
+- add category on the table - this means adding a category - need to build this in the logic of QA pair generation - maybe a separate logic or could be embedded
+- pagination also
+- need a way to filter un-reviewed questions (maybe a tickbox at the top)
+
+checklist:
+Done - Create a new view under the core app for managing Q&A pairs.
+Done - Build the HTML template with a table, filters, and pagination.
+Add "Edit" and "Delete" buttons for each Q&A pair.
+Link "Add New Q&A Pair" to a form or separate page.
+Update the QAPair model to include a status field (Pending, Reviewed, Edited).
+Populate sample data for testing purposes.
+Add logic to filter Q&A pairs by status and search query.
+Implement pagination for large datasets.
+Build a form to edit existing Q&A pairs.
+Add logic to delete Q&A pairs with a confirmation prompt.
+Create a form to add new Q&A pairs.
+Display success/error messages for add, edit, and delete actions.
+Test filtering, search, and pagination functionality.
+Test adding, editing, and deleting Q&A pairs.
+
+- Build CRUD, for reviewing Q and A Pairs --*current WIP*--
+- Build metrics and graphs in the dashboard
+- Add control panel function - send data to voiceflow knowledgebase end point
+- Add control panel - export data through different formats (xls, csv, txt)
 
 ### **Further Enhancements**
 - Implement WebSockets (optional) for real-time updates instead of polling.
 - Consider adding a "View All Tasks" section or page for comprehensive task history.
+- build a toast notifcation script to the dashboard
+- test toast system
