@@ -30,7 +30,9 @@ def redirect_to_login(request):
     return redirect('core:login')
 
 
-### USER TASKS API ###
+# ### USER TASKS API ###
+# -----------------------
+
 @login_required
 def user_tasks(request: HttpRequest) -> JsonResponse:
     user = request.user
@@ -48,12 +50,16 @@ def user_tasks(request: HttpRequest) -> JsonResponse:
     return JsonResponse(list(tasks), safe=False)
 
 ### TASK TRACKING VIEW ###
+# -----------------------
+
 @method_decorator(login_required, name='dispatch')
 class TaskTrackingView(TemplateView):
     template_name = 'task_tracking.html'
 
 
 ### TASK DELETION API ###
+# -----------------------
+
 @csrf_exempt
 def delete_task(request, task_id):
     if request.method == 'DELETE':
@@ -66,6 +72,8 @@ def delete_task(request, task_id):
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 ### TASK DELETION ALL ###
+# -----------------------
+
 @csrf_exempt
 def delete_all_tasks(request):
     if request.method == 'DELETE':
@@ -74,6 +82,8 @@ def delete_all_tasks(request):
     return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
 ### MANAGE Q AND A PAIRS ###
+# -----------------------
+
 @login_required
 def manage_q_and_a(request):
     status = request.GET.get('status', '')
@@ -102,6 +112,8 @@ def manage_q_and_a(request):
 
 
 ### EDIT Q AND A PAIR ###
+# -----------------------
+
 @login_required
 def edit_q_and_a(request, qa_id):
     qa_pair = get_object_or_404(QAPair, qa_id=qa_id)
@@ -125,6 +137,8 @@ def edit_q_and_a(request, qa_id):
 
 
 ### DELETE Q AND A PAIR ###
+# -----------------------
+
 @login_required
 def delete_q_and_a(request, qa_id):
     if request.method == "POST":
@@ -136,3 +150,27 @@ def delete_q_and_a(request, qa_id):
     else:
         messages.error(request, "Invalid request method.")
         return redirect('core:manage-q-and-a')
+    
+
+### CREATE Q AND A PAIR ###
+# -----------------------
+
+@login_required
+def create_q_and_a(request):
+    if request.method == 'POST':
+        question = request.POST.get('question')
+        answer = request.POST.get('answer')
+        status = request.POST.get('status', 'Pending')
+
+        if question and answer:
+            QAPair.objects.create(
+                question=question,
+                answer=answer,
+                status=status,
+            )
+            messages.success(request, "Q&A Pair created successfully.")
+            return redirect('core:create-q-and-a')
+        else:
+            messages.error(request, "Both question and answer fields are required.")
+    
+    return render(request, 'core/create_q_and_a.html')

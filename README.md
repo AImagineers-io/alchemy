@@ -307,18 +307,20 @@ Manage Q & A Pairs screen
 checklist:
 Done - Create a new view under the core app for managing Q&A pairs.
 Done - Build the HTML template with a table, filters, and pagination.
-Add "Edit" and "Delete" buttons for each Q&A pair.
-Link "Add New Q&A Pair" to a form or separate page.
-Update the QAPair model to include a status field (Pending, Reviewed, Edited).
-Populate sample data for testing purposes.
-Add logic to filter Q&A pairs by status and search query.
-Implement pagination for large datasets.
-Build a form to edit existing Q&A pairs.
-Add logic to delete Q&A pairs with a confirmation prompt.
+Done - Add "Edit" and "Delete" buttons for each Q&A pair.
+Done - Update the QAPair model to include a status field (Pending, Reviewed, Edited).
+Done - Add logic to filter Q&A pairs by status and search query.
+Done - Implement pagination for large datasets.
+Done - Build a form to edit existing Q&A pairs.
+Done - Add logic to delete Q&A pairs with a confirmation prompt.
+Done - Test filtering, search, and pagination functionality.
+
 Create a form to add new Q&A pairs.
+Link "Add New Q&A Pair" to a form or separate page.
 Display success/error messages for add, edit, and delete actions.
-Test filtering, search, and pagination functionality.
 Test adding, editing, and deleting Q&A pairs.
+
+
 
 - Build CRUD, for reviewing Q and A Pairs --*current WIP*--
 - Build metrics and graphs in the dashboard
@@ -330,3 +332,4 @@ Test adding, editing, and deleting Q&A pairs.
 - Consider adding a "View All Tasks" section or page for comprehensive task history.
 - build a toast notifcation script to the dashboard
 - test toast system
+

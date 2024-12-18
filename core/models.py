@@ -118,7 +118,7 @@ class QAPair(models.Model):
     ]
 
     qa_id = models.AutoField(primary_key=True)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='qa_pairs')
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='qa_pairs', null=True, blank=True)
     question = models.TextField()
     answer = models.TextField()
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')

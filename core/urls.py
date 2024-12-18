@@ -22,5 +22,6 @@ urlpatterns = [
     path('manageqapairs/', views.manage_q_and_a, name='manage-q-and-a'),
     path('manageqapairs/edit/<int:qa_id>/', views.edit_q_and_a, name='edit-q-and-a'),
     path('manageqapairs/delete/<int:qa_id>/', views.delete_q_and_a, name='delete-qa-pair'),
+    path('manageqapairs/create/', views.create_q_and_a, name='create-q-and-a'),
 ]
 

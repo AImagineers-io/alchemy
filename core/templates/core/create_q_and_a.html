@@ -1,0 +1,58 @@
+{% load static %}
+{% include 'header.html' %}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            {% include 'sidebar.html' %}
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="p-4">
+                <h1>Create Manual Q&A Pair</h1>
+
+
+                <!-- Notification Messages -->
+                {% if messages %}
+                <div class="container mt-3">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}                
+
+                <form method="post" action="">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="question" class="form-label">Question:</label>
+                        <textarea id="question" name="question" rows="3" class="form-control"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="answer" class="form-label">Answer:</label>
+                        <textarea id="answer" name="answer" rows="3" class="form-control"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status:</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="Pending">Pending</option>
+                            <option value="Reviewed">Reviewed</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Save Q&A Pair</button>
+                    <a href="{% url 'core:manage-q-and-a' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}
