@@ -250,6 +250,39 @@ This flowchart outlines the process of document processing within the Project AL
 
 ---
 
+## V[0.9.0] - 2024-12-19  
+### Added  
+- Created a new **Q&A Management** view under the core app:  
+  - Built a dedicated page for managing Q&A pairs.  
+  - Displayed Q&A pairs in a table with pagination, filters, and search functionality.  
+- Implemented **status filtering** for Q&A pairs:  
+  - Added a `status` field to the QAPair model with options: Pending, Reviewed, Edited.  
+  - Added a dropdown filter to sort Q&A pairs by their current status.  
+- Introduced **search functionality**:  
+  - Enabled users to search Q&A pairs based on the question or answer content.  
+- Built **pagination** support for large datasets:  
+  - Displayed 10 Q&A pairs per page with "Next" and "Previous" navigation.  
+  - Added dynamic row numbering to ensure entries are sequentially displayed.  
+- Added actions for **editing and deleting Q&A pairs**:  
+  - Built a form to edit existing Q&A pairs.  
+  - Added a "Delete" button for each entry with a confirmation prompt.  
+- Created a **form for manual entry** of new Q&A pairs:  
+  - Added a "Create Manual Entry" button to allow manual addition of Q&A pairs.  
+  - Provided fields for Question, Answer, and Status.  
+- Displayed **success/error messages** for all actions:  
+  - Users receive feedback after adding, editing, or deleting a Q&A pair.  
+
+### Fixed  
+- Resolved an issue where pagination reset to the first page after editing a Q&A pair.  
+- Addressed missing Bootstrap JavaScript for dismissible alerts (messages).  
+
+### Changed  
+- Refactored the QAPair model to include a `status` field with predefined choices (Pending, Reviewed).  
+- Improved user experience for table pagination:  
+  - Ensured filters and search queries persist across pages.  
+  - Added "First" and "Last" buttons for better navigation.  
+x
+
 ### **Current Status**
 - The application successfully processes documents, generates Q&A pairs, and tracks task progress dynamically with user-facing updates.
 
@@ -276,60 +309,28 @@ You are working on making Project Alchemy's dashboard more user-friendly by:
 3. **Task Logs**: Adding a backend logging system to record task events and integrating it with the toast system.
 
 ---
-
-## **Progress So Far**
-
-### **Backend**
-- Created a `LogEntry` model to store task logs (user messages for toast notifications).
-- Tasks in `tasks.py` now log key events (e.g., "Task started," "Task 50% complete," "Task completed").
-
-### **API**
-- Created a `/logs/recent/` API endpoint to fetch recent log entries for the authenticated user.
-
-### **Frontend**
-- Built a basic toast notification system with:
-  - **CSS for styling toasts**.
-  - **JavaScript logic** to fetch logs from the API and display toasts dynamically.
-- Discussed polling and real-time updates using WebSockets or Django Channels for future improvements.
-
----
 ## **What’s Next?**
 
-Manage Q & A Pairs screen
-- display table showing all pairs - with edit and delete buttons
-- filter function
-- search function
-- add reviewed tick box - this means adding a reviewed field on QApairs model
-- add category on the table - this means adding a category - need to build this in the logic of QA pair generation - maybe a separate logic or could be embedded
-- pagination also
-- need a way to filter un-reviewed questions (maybe a tickbox at the top)
+Build the dashboard view
+- Display Total QA pairs
+- Display Number of Pending QA pairs
+- Display Number of Reviewed QA pairs
+- Display % Reviewed completion
+- Display line graph showing QA pairs created each day (last 30 days)
 
-checklist:
-Done - Create a new view under the core app for managing Q&A pairs.
-Done - Build the HTML template with a table, filters, and pagination.
-Done - Add "Edit" and "Delete" buttons for each Q&A pair.
-Done - Update the QAPair model to include a status field (Pending, Reviewed, Edited).
-Done - Add logic to filter Q&A pairs by status and search query.
-Done - Implement pagination for large datasets.
-Done - Build a form to edit existing Q&A pairs.
-Done - Add logic to delete Q&A pairs with a confirmation prompt.
-Done - Test filtering, search, and pagination functionality.
-
-Create a form to add new Q&A pairs.
-Link "Add New Q&A Pair" to a form or separate page.
-Display success/error messages for add, edit, and delete actions.
-Test adding, editing, and deleting Q&A pairs.
-
-
-
-- Build CRUD, for reviewing Q and A Pairs --*current WIP*--
-- Build metrics and graphs in the dashboard
-- Add control panel function - send data to voiceflow knowledgebase end point
-- Add control panel - export data through different formats (xls, csv, txt)
+- 
 
 ### **Further Enhancements**
 - Implement WebSockets (optional) for real-time updates instead of polling.
 - Consider adding a "View All Tasks" section or page for comprehensive task history.
 - build a toast notifcation script to the dashboard
 - test toast system
+
+- Implement further dashboard features
+  - Progress bar or donut chart for reviewed vs pending qa pairs showing %
+  - list of recent actions
+  - Show which users added oredited the most Q&A pairs
+  - Identify and display Q&A pairs
+  - duplicate detection
+  - quick actions section
 

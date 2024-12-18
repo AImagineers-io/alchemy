@@ -3,22 +3,93 @@
 
 <div class="container-fluid">
     <div class="row">
-        <!-- Sidebar Column-->
-         <div class="col-md-3">
+        <!-- Sidebar Column -->
+        <div class="col-md-3">
             {% include 'sidebar.html' %}
-         </div>
+        </div>
 
-         <!-- Main Content Column-->
-          <div class="col-md-9">
-            <div class="p-4">
-                <h1>Welcome to the Alchemy Dashboard</h1>
+        <!-- Main Content Column -->
+        <div class="col-md-9">
+            <h1 class="mb-4">Dashboard</h1>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <!-- Total Q&A Pairs -->
+                <div class="col-md-3">
+                    <div class="card text-dark bg-light mb-3">
+                        <div class="card-header">Total Q&A Pairs</div>
+                        <div class="card-body">
+                            <h3 class="card-title">{{ total_qas }}</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Q&A Pairs -->
+                <div class="col-md-3">
+                    <div class="card text-dark bg-light mb-3">
+                        <div class="card-header">Pending Q&A Pairs</div>
+                        <div class="card-body">
+                            <h3 class="card-title">{{ pending_qas }}</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviewed Q&A Pairs -->
+                <div class="col-md-3">
+                    <div class="card text-dark bg-light mb-3">
+                        <div class="card-header">Reviewed Q&A Pairs</div>
+                        <div class="card-body">
+                            <h3 class="card-title">{{ reviewed_qas }}</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- % Reviewed Completion -->
+                <div class="col-md-3">
+                    <div class="card text-dark bg-light mb-3">
+                        <div class="card-header">% Reviewed Completion</div>
+                        <div class="card-body">
+                            <h3 class="card-title">{{ reviewed_percentage }}%</h3>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
 
-
-
+            <!-- Line Graph Section -->
+            <h3 class="mb-3">Q&A Pairs Created Each Day (Last 30 Days)</h3>
+            <canvas id="lineGraph" width="400" height="150"></canvas>
+        </div>
     </div>
 </div>
 
-
 {% include 'footer.html' %}
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const chartData = {{ chart_data|safe }};
+    const labels = Object.keys(chartData);
+    const data = Object.values(chartData);
+
+    const ctx = document.getElementById('lineGraph').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Q&A Pairs Created',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
