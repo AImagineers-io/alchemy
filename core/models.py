@@ -112,10 +112,17 @@ class TaskLog(models.Model):
         return f"Task: {self.task_name} (Status: {self.status})"
 
 class QAPair(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Reviewed', 'Reviewed'),
+    ]
+
     qa_id = models.AutoField(primary_key=True)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='qa_pairs')
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='qa_pairs', null=True, blank=True)
     question = models.TextField()
     answer = models.TextField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
+    category = models.CharField(max_length=255, null=True, blank=True)
     source_name = models.CharField(max_length=255, null=True, blank=True)
     publication_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
